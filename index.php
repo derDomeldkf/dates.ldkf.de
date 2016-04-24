@@ -133,7 +133,7 @@
 		<div class="main" role="main" style="height:100%">
 			<div class="calendar">
 				<div class="row">
-					<div class="col-md-3 month" style="">
+					<div class="col-md-4 month" style="">
 						<div class="head">
 							<div class="navigation">
 								<form action="?" style="" method="GET">
@@ -220,7 +220,7 @@
 						
 						
 					</div>
-					<div class="col-md-9" style="">
+					<div class="col-md-8" style="">
 						<< Tag >>
 					</div>
 				</div>
