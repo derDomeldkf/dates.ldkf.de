@@ -144,7 +144,7 @@
 								</form>
 							</div>
 							<div class="navigation">
-								<h4><?php echo utf8_decode(strftime("%B %Y", $kal_datum)); ?></h4>
+								<h4><?php echo month_rename(utf8_decode(strftime("%B %Y", $kal_datum))) ; ?></h4>
 							</div>
 							<div class="navigation">
 								<form action="?" style="" method="GET">
