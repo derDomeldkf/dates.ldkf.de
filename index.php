@@ -143,7 +143,7 @@
 									</button>
 								</form>
 							</div>
-							<div class="navigation">
+							<div class="navigation" style="width:180px;">
 								<h4><?php echo month_rename(utf8_decode(strftime("%B %Y", $kal_datum))) ; ?></h4>
 							</div>
 							<div class="navigation">
