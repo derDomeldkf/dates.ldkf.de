@@ -109,8 +109,11 @@
 	      	<div id="navbar" class="navbar-collapse collapse">
   					<ul class="nav navbar-nav" >
     					<li class="active"><a href="">Startseite<span class="sr-only">(current)</span></a></li>
-     					<li><a href="upload.php">Uploader</a></li>
-     					<li><a href="group.php" title="Erm&ouml;glicht Gruppierung von MSN-Accounts">Multi-Accounts</a></li>
+    					<?php if($login_status==false): ?>
+    					<li><a href="https://xauth.ldkf.de/connect.php?id=<?php echo $appid; ?>">Login</a></li> 
+    					<?php else : ?>
+    					<li><a href="#">Logout</a></li> 
+    					<?php endif; ?>   					
      				</ul>
     			</div>
 			</div>
@@ -206,7 +209,7 @@
     										else {
       										echo ' other" ';
       									}
-      									echo 'id="'.$date.'">'.$kal_anzeige_heute_tag.'</td>';
+      									echo ' id="'.$date.'"><span style="cursor:pointer">'.$kal_anzeige_heute_tag.'</span></td>';
     										if(date("N",$kal_anzeige_heute_timestamp) == 7){
       										echo '</tr>';
       									}	
