@@ -12,7 +12,7 @@
 	}
 	function post($user_id, $appid, $secret, $method, $action){
 			$hash = hash("sha256", $secret.$appid.$user_id.$action);
-        	$url = 'https://xauth.ldkf.de/api.php';
+        	$url = 'xauth.ldkf.de/api.php';
         	$data = array('appid' => $appid, 'id' => $user_id, 'hash' => $hash, 'action' => $action);
         	$options = array(
          	'http' => array(
