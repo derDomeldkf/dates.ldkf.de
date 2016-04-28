@@ -1,27 +1,37 @@
 <?php
-	function get_user($secret, $appid) {
-		if(isset($_COOKIE['user']) and $_COOKIE['user']!="") {
-			$user_id=$_COOKIE['user'];
-			$action="username";
-			$method="action=".$action;
-			$hash = hash("sha256", $secret.$appid.$user_id.$action);
-			post($user_id, $appid, $method, $hash);
-
-		}	
-		
-
+	function get_user($user_id, $secret, $appid) {
+		$action="all";
+		$method="action";
+		return post($user_id, $appid, $secret, $method, $action);
+	}	
+	function get_id($user_id, $secret, $appid){
+		$action="userid";
+		$method="action";
+		return post($user_id, $appid, $secret, $method, $action);	
+	
 	}
-	
-	function post($user_id, $appid, $method, $hash){
-		$content=file_get_contents("https://xauth.ldkf.de/api.php?appid=".$appid."&id" . $user_id . "&hash=" . $hash . "&" . $method);	
+	function post($user_id, $appid, $secret, $method, $action){
+			$hash = hash("sha256", $secret.$appid.$user_id.$action);
+        	$url = 'https://xauth.ldkf.de/api.php';
+        	$data = array('appid' => $appid, 'id' => $user_id, 'hash' => $hash, 'action' => $action);
+        	$options = array(
+         	'http' => array(
+            	'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+               'method' => 'POST',
+               'content' => http_build_query($data),
+         	),
+        	);
+        	$context = stream_context_create($options);
+        	$result = @file_get_contents($url, false, $context);
+        	if ($result === FALSE) {
+				$content=1;
+        	}
+        	else {
+            $content = $result;
+			}
 		return $content;
 	} 
 	
-	function say_login(){
-		$content="";
-		return $content;
-	} 
-
 	function month_rename($date_eng) {
 		$date_eng =  str_replace("Monday", "Montag",$date_eng);
 		$date_eng =  str_replace("Tuesday", "Dienstag",$date_eng);

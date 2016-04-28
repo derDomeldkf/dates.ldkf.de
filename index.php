@@ -3,15 +3,40 @@
 	include "include/config.php";
  	include "include/db_connect.php";
   	include "include/functions.php";
-?>
-<?php
-	if(get_user($secret, $appid) !=""){
-		$login_status=true;
+	$info="";
+	if(isset($_GET['id']) and $_GET['id']!="") {
+		$id=$_GET['id'];
+	}
+	elseif(isset($_COOKIE['user']) and $_COOKIE['user']!="") {
+		$id=$_COOKIE['user'];
+	}
+	if(isset($id) and $id!="") {
+		$info=get_id($id, $secret, $appid);
+		$info=json_decode($info);
+		if ($info->status=="Success"){
+			$userid=$info->userid;
+			$info=get_user($id, $secret, $appid);
+			$info=json_decode($info);
+			if ($info->status=="Success"){
+				setcookie('user', $id, time()+(3600*24*365));  
+				$ln=$info->last_name;
+				$fn=$info->first_name;
+				$username=$info->username;
+				$login_status=true;
+				
+			}
+			else {
+				$login_status=false;
+			}
+		}		
+		else {
+			$login_status=false;
+		}
 	}
 	else {
 		$login_status=false;
 	}
-
+	
 ?>
 
 <html>
@@ -110,7 +135,7 @@
   					<ul class="nav navbar-nav" >
     					<li class="active"><a href="">Startseite<span class="sr-only">(current)</span></a></li>
     					<?php if($login_status==false): ?>
-    					<li><a href="https://xauth.ldkf.de/connect.php?id=<?php echo $appid; ?>">Login</a></li> 
+    					<li><a href="https://xauth.ldkf.de/connect.php?appid=<?php echo $appid; ?>">Login</a></li> 
     					<?php else : ?>
     					<li><a href="#">Logout</a></li> 
     					<?php endif; ?>   					
@@ -120,7 +145,6 @@
 		</nav>
 			<?php
 				setlocale(LC_TIME, "de_DE.utf8");
-				
 				if(isset($_GET['go'])) {
 					$change_month=$_GET['go'];
 				}
@@ -135,6 +159,9 @@
 			?>
 		<div class="main" role="main" style="height:100%">
 			<div class="calendar">
+			<?php if($login_status==true): ?>
+				<h3>Hallo <?php echo $fn." ".$ln; ?>.</h3>
+    					
 				<div class="row">
 					<div class="col-md-4 month" style="">
 						<div class="head">
@@ -176,11 +203,11 @@
 										$dbyday[]="";
 										$dbdate[]="";
 										$month = date("n", $kal_datum);
-										$getdate = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 1"); 
+										$getdate = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 1 and `uid` = $id"); 
 										while($name = $getdate->fetch_assoc()){
 											$dbdate[]= strtotime( $name['date'] );
 										}
-										$getyday = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 2"); 
+										$getyday = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 2 and `uid` = $id"); 
 										while($namey = $getyday->fetch_assoc()){
 											$dbyday[]= date("m-d", strtotime( $namey['date'] ));
 										}
@@ -230,20 +257,10 @@
 				<div class="days">
 				
 				</div>
-				
+				<?php else : ?>
+					<h2>here to login</h2>
+    			<?php endif; ?>  
 			</div>
-
-
-			<?php
-				switch($login_status) {
-					case true:
-						//echo "user";
-					break;
-					case false:
-						echo say_login();
-					break;
-				}
-			?>
 		</div>  
 	</body>
 </html> 
