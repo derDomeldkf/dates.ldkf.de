@@ -12,8 +12,8 @@
 	}
 	if(isset($id) and $id!="") {
 		$info=get_id($id, $secret, $appid);
-		$info=json_decode($info);
 		var_dump($info);
+		//$info=json_decode($info);
 		if (isset($info->status) and $info->status=="Success"){
 			$userid=$info->userid;
 			$info=get_user($id, $secret, $appid);
