@@ -29,7 +29,7 @@
         	else {
             $content = $result;
 			}
-		return $data;
+		return $content;
 	} 
 	
 	function month_rename($date_eng) {
