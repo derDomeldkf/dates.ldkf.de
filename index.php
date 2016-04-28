@@ -30,6 +30,7 @@
 			}
 		}		
 		else {
+			echo "llllll";
 			$login_status=false;
 		}
 	}
