@@ -64,6 +64,7 @@
 			.calendar{
 				vertical-align: middle;	
 				margin: 0px auto;	
+				text-align: left;
 			}
 			.main{
 				padding: 0 30px 0 30px;
@@ -71,10 +72,9 @@
 			.month{
 				vertical-align: middle;
 				text-align: center;	
-			
 			}
 			.head{
-				margin: 0px auto;	
+
 				vertical-align: middle;	
 				padding: 5px 0 5px 0;
 				width: 300px;
@@ -152,7 +152,7 @@
 		<div class="main" role="main" style="height:100%">
 			<div class="calendar">
 			<?php if(isset($_SESSION['login']) and $_SESSION['login']==true): ?>
-				<h3>Hallo <?php echo $fn." ".$ln; ?>.</h3>
+				<h3 style="padding-left:5px;">Hallo <?php echo $fn." ".$ln; ?>.</h3>
     		<?php endif; ?>			
 				<div class="row">
 					<div class="col-md-4 month" style="">
@@ -244,7 +244,24 @@
 						
 					</div>
 					<div class="col-md-8" style="">
-						<< Tag >>
+						<div class="dateday">
+							<?php
+								$date=time();
+								$m=date('n', $date);
+								$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and `type` = 1 and `id` = $id"); 
+								while($name = $getdate->fetch_assoc()){
+									$dates[]=  date("G:i", strtotime( $name['date'] ));
+									$place[]=  $name['place'] ;
+									$disc[]=$name['disc'];
+								}
+								$i=0;
+								foreach($dates as $time){
+									echo "Zeitpunkt: ".$time." Uhr<br>Beschreibung: ".$disc[$i]."<br>Ort: ".$place[$i]."<br><br>";
+									$i++;
+								}								
+							?>
+						
+						</div>						
 					</div>
 				</div>
 				<div class="days">
