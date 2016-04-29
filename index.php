@@ -246,7 +246,6 @@
 					<div class="col-md-8" style="">
 						<div class="dateday">
 							<?php
-								$dates[]="";
 								$date=time();
 								$m=date('n', $date);
 								$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and `type` = 1 and `id` = $id"); 
@@ -256,10 +255,12 @@
 									$disc[]=$name['disc'];
 								}
 								$i=0;
-								foreach($dates as $time){
-									echo "Zeitpunkt: ".$time." Uhr<br>Beschreibung: ".$disc[$i]."<br>Ort: ".$place[$i]."<br><br>";
-									$i++;
-								}								
+								if(isset($dates[0])) {
+									foreach($dates as $time){
+										echo "Zeitpunkt: ".$time." Uhr<br>Beschreibung: ".$disc[$i]."<br>Ort: ".$place[$i]."<br><br>";
+										$i++;
+									}	
+								}							
 							?>
 						
 						</div>						
