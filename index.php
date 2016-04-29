@@ -12,6 +12,8 @@
 		$check_uid = $db->query("SELECT `uid` FROM `userdates` WHERE id LIKE '$id'"); 
 		if(isset($check_uid->num_rows) and  $check_uid->num_rows!= 0) {
 			$id = $check_uid->fetch_assoc()['uid'];
+			$_SESSION['id']=$id;	
+			$_SESSION['login']=true;
 	      $info=get_user($id, $secret, $appid, $ssl);
          $info=json_decode($info);
          if ($info->status=="Success"){
@@ -246,20 +248,22 @@
 					<div class="col-md-8" style="">
 						<div class="dateday">
 							<?php
-								$date=time();
-								$m=date('n', $date);
-								$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and `type` = 1 and `id` = $id"); 
-								while($name = $getdate->fetch_assoc()){
-									$dates[]=  date("G:i", strtotime( $name['date'] ));
-									$place[]=  $name['place'] ;
-									$disc[]=$name['disc'];
-								}
-								$i=0;
-								if(isset($dates[0])) {
-									foreach($dates as $time){
-										echo "Zeitpunkt: ".$time." Uhr<br>Beschreibung: ".$disc[$i]."<br>Ort: ".$place[$i]."<br><br>";
-										$i++;
-									}	
+								if(isset($_SESSION['login']) and $_SESSION['login']==true){
+									$date=time();
+									$m=date('n', $date);
+									$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and `type` = 1 and `id` = $id"); 
+									while($name = $getdate->fetch_assoc()){
+										$dates[]=  date("G:i", strtotime( $name['date'] ));
+										$place[]=  $name['place'] ;
+										$disc[]=$name['disc'];
+									}
+									$i=0;
+									if(isset($dates[0])) {
+										foreach($dates as $time){
+											echo "Zeitpunkt: ".$time." Uhr<br>Beschreibung: ".$disc[$i]."<br>Ort: ".$place[$i]."<br><br>";
+											$i++;
+										}	
+									}
 								}							
 							?>
 						
