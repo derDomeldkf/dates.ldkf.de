@@ -77,6 +77,7 @@
 				margin: 0px auto;	
 				vertical-align: middle;	
 				padding: 5px 0 5px 0;
+				width: 300px;
 			}
 			.week{
 				margin: 0px auto;	
