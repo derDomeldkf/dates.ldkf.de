@@ -152,7 +152,7 @@
 			<div class="calendar">
 			<?php if(isset($_SESSION['login']) and $_SESSION['login']==true): ?>
 				<h3>Hallo <?php echo $fn." ".$ln; ?>.</h3>
-    					
+    		<?php endif; ?>			
 				<div class="row">
 					<div class="col-md-4 month" style="">
 						<div class="head">
@@ -194,13 +194,15 @@
 										$dbyday[]="";
 										$dbdate[]="";
 										$month = date("n", $kal_datum);
-										$getdate = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 1 and `id` = $id"); 
-										while($name = $getdate->fetch_assoc()){
-											$dbdate[]= strtotime( $name['date'] );
-										}
-										$getyday = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 2 and `id` = $id"); 
-										while($namey = $getyday->fetch_assoc()){
-											$dbyday[]= date("m-d", strtotime( $namey['date'] ));
+										if(isset($_SESSION['login']) and $_SESSION['login']==true){
+											$getdate = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 1 and `id` = $id"); 
+											while($name = $getdate->fetch_assoc()){
+												$dbdate[]= strtotime( $name['date'] );
+											}
+											$getyday = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 2 and `id` = $id"); 
+											while($namey = $getyday->fetch_assoc()){
+												$dbyday[]= date("m-d", strtotime( $namey['date'] ));
+											}
 										}
   										for($i = 1; $i <= $kal_tage_gesamt+($kal_start_tag-1)+(7-$kal_ende_tag); $i++){
     										$kal_anzeige_akt_tag = $i - $kal_start_tag;
@@ -217,17 +219,16 @@
       									if (in_array(date("m-d",$kal_anzeige_heute_timestamp), $dbyday)) {
     											echo " yday";
 											}					
-      									
-    										if(date("dmY", time()) == date("dmY", $kal_anzeige_heute_timestamp)){
-      										echo ' top"';
-      									}
-    										elseif($kal_anzeige_akt_tag >= 0 and $kal_anzeige_akt_tag < $kal_tage_gesamt){
-     											echo ' this" ';
+      									elseif($kal_anzeige_akt_tag >= 0 and $kal_anzeige_akt_tag < $kal_tage_gesamt){
+     											echo ' this ';
+     											if(date("dmY", time()) == date("dmY", $kal_anzeige_heute_timestamp)){
+      											echo ' top';
+      										}
      										}
     										else {
-      										echo ' other" ';
+      										echo ' other ';
       									}
-      									echo ' id="'.$date.'"><span style="cursor:pointer">'.$kal_anzeige_heute_tag.'</span></td>';
+      									echo '" id="'.$date.'"><span style="cursor:pointer">'.$kal_anzeige_heute_tag.'</span></td>';
     										if(date("N",$kal_anzeige_heute_timestamp) == 7){
       										echo '</tr>';
       									}	
@@ -248,9 +249,6 @@
 				<div class="days">
 				
 				</div>
-				<?php else : ?>
-					<h2>here to login</h2>
-    			<?php endif; ?>  
 			</div>
 		</div>  
 	</body>
