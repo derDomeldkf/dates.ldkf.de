@@ -135,7 +135,7 @@
   					<ul class="nav navbar-nav" >
     					<li class="active"><a href="">Startseite<span class="sr-only">(current)</span></a></li>
     					<?php if($login_status==false): ?>
-    					<li><a href="https://xauth.ldkf.de/connect.php?appid=<?php echo $appid; ?>">Login</a></li> 
+    					<li><a href="https://xauth.ldkf.de/connect.php?appid=<?php echo $appid; ?>&ret=login.php">Login</a></li> 
     					<?php else : ?>
     					<li><a href="#">Logout</a></li> 
     					<?php endif; ?>   					
