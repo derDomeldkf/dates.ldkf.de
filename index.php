@@ -128,7 +128,7 @@
     					<?php if(!isset($_SESSION['login']) or $_SESSION['login']==false): ?>
     					<li><a href="https://xauth.ldkf.de/connect.php?appid=<?php echo $appid; ?>&ret=login.php">Login</a></li> 
     					<?php else : ?>
-    					<li><a href="#">Logout</a></li> 
+    					<li><a href="logout.php">Logout</a></li> 
     					<?php endif; ?>   					
      				</ul>
     			</div>
