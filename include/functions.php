@@ -1,34 +1,34 @@
 <?php
-	function get_user($user_id, $secret, $appid) {
+	function get_user($user_id, $secret, $appid, $ssl) {
 		$action="all";
 		$method="action";
-		return post($user_id, $appid, $secret, $method, $action);
+		return post($user_id, $appid, $secret, $method, $action, $ssl);
 	}	
-	function get_id($user_id, $secret, $appid){
+	function get_id($user_id, $secret, $appid, $ssl){
 		$action="userid";
 		$method="action";
-		return post($user_id, $appid, $secret, $method, $action);	
+		return post($user_id, $appid, $secret, $method, $action, $ssl);	
 	
 	}
-	function post($user_id, $appid, $secret, $method, $action){
-			$hash = hash("sha256", $secret.$appid.$user_id.$action);
-        	$url = 'https://xauth.ldkf.de:4443/api.php';
-        	$data = array('appid' => $appid, 'id' => $user_id, 'hash' => $hash, 'action' => $action);
-        	$options = array(
-         	'http' => array(
-            	'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-               'method' => 'POST',
-               'content' => http_build_query($data),
-         	),
-        	);
-        	$context = stream_context_create($options);
-        	$result = @file_get_contents($url, false, $context);
-        	if ($result === FALSE) {
-				$content=1;
-        	}
-        	else {
-            $content = $result;
-			}
+	function post($user_id, $appid, $secret, $method, $action, $ssl){
+		$hash = hash("sha256", $secret.$appid.$user_id.$action);
+     	$url = 'https://xauth.ldkf.de'.$ssl.'/api.php';
+    	$data = array('appid' => $appid, 'id' => $user_id, 'hash' => $hash, 'action' => $action);
+     	$options = array(
+        	'http' => array(
+           	'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+      	   'method' => 'POST',
+  		      'content' => http_build_query($data),
+        	),
+      );
+     	$context = stream_context_create($options);
+     	$result = @file_get_contents($url, false, $context);
+     	if ($result === FALSE) {
+			$content=1;
+      }
+     	else {
+      	$content = $result;
+		}
 		return $content;
 	} 
 	

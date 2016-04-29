@@ -5,36 +5,27 @@
   	include "include/functions.php";
 	$info="";
 	if(isset($_GET['id']) and $_GET['id']!="") {
-		$id=$_GET['id'];
+		echo "what did you do?";
 	}
 	elseif(isset($_COOKIE['user']) and $_COOKIE['user']!="") {
 		$id=$_COOKIE['user'];
-	}
-	if(isset($id) and $id!="") {
-		$info=get_id($id, $secret, $appid);
-		$info=json_decode($info);
-		if (isset($info->status) and $info->status=="Success"){
-			$userid=$info->userid;
-			$info=get_user($id, $secret, $appid);
-			$info=json_decode($info);
-			if ($info->status=="Success"){
-				setcookie('user', $id, time()+(3600*24*365));  
-				$ln=$info->last_name;
-				$fn=$info->first_name;
-				$username=$info->username;
-				$login_status=true;
-				
-			}
-			else {
-				$login_status=false;
-			}
-		}		
-		else {
-			$login_status=false;
-		}
-	}
-	else {
-		$login_status=false;
+		$check_uid = $db->query("SELECT `uid` FROM `userdates` WHERE id LIKE '$id'"); 
+		if(isset($check_uid->num_rows) and  $check_uid->num_rows!= 0) {
+			$id = $check_uid->fetch_assoc()['uid'];
+	      $info=get_user($id, $secret, $appid, $ssl);
+         $info=json_decode($info);
+         if ($info->status=="Success"){
+            $ln=$info->last_name;
+            $fn=$info->first_name;
+            $username=$info->username;
+         }
+         else {
+         	$error=2;
+         }
+ 		}
+ 		else {
+      	$error=1;
+   	}
 	}
 	
 ?>
@@ -134,7 +125,7 @@
 	      	<div id="navbar" class="navbar-collapse collapse">
   					<ul class="nav navbar-nav" >
     					<li class="active"><a href="">Startseite<span class="sr-only">(current)</span></a></li>
-    					<?php if($login_status==false): ?>
+    					<?php if(!isset($_SESSION['login']) or $_SESSION['login']==false): ?>
     					<li><a href="https://xauth.ldkf.de/connect.php?appid=<?php echo $appid; ?>&ret=login.php">Login</a></li> 
     					<?php else : ?>
     					<li><a href="#">Logout</a></li> 
@@ -159,7 +150,7 @@
 			?>
 		<div class="main" role="main" style="height:100%">
 			<div class="calendar">
-			<?php if($login_status==true): ?>
+			<?php if(isset($_SESSION['login']) and $_SESSION['login']==true): ?>
 				<h3>Hallo <?php echo $fn." ".$ln; ?>.</h3>
     					
 				<div class="row">
@@ -203,11 +194,11 @@
 										$dbyday[]="";
 										$dbdate[]="";
 										$month = date("n", $kal_datum);
-										$getdate = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 1 and `uid` = $id"); 
+										$getdate = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 1 and `id` = $id"); 
 										while($name = $getdate->fetch_assoc()){
 											$dbdate[]= strtotime( $name['date'] );
 										}
-										$getyday = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 2 and `uid` = $id"); 
+										$getyday = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 2 and `id` = $id"); 
 										while($namey = $getyday->fetch_assoc()){
 											$dbyday[]= date("m-d", strtotime( $namey['date'] ));
 										}
