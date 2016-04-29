@@ -37,32 +37,27 @@
 		<link rel="icon" href="favicon.png">
 		<link href="https://msn.ldkf.de/css/bootstrap.min.css" rel="stylesheet">
     	<link href="https://msn.ldkf.de/css/bootstrap-theme.min.css" rel="stylesheet">
+		<script type="text/javascript" src="https://msn.ldkf.de/js/jquery-1.11.2.min.js"></script>
+   	<script type="text/javascript" src="https://msn.ldkf.de/js/bootstrap.min.js"></script>
 		<title>Startseite</title>
 		<script type="text/javascript">
     		window.cookieconsent_options = {"message":"This website uses cookies to ensure you get the best experience on our website","dismiss":"Got it!","learnMore":"More info","link":null,"theme":"dark-bottom"};
 		</script>
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
 		<script type="text/javascript">
-  			/*function getcalendar(){
-				$.post("include/get.php",{
-					0: "<?php echo $user_in; ?>",
-					1: $(this).attr("value"),
-				},
-   			function (data) {
-					if (data.indexOf("div") != -1) {
-						$( ".del" ).replaceWith( "" );
-						$( ".repl" ).replaceWith( data );
-					}
-				}
-   			);		 		
-			}
-			$(document).ready(
-				function(){
-					getcalendar();
-		   	}
-			); */
+			$( "#target" ).submit(function( event ) {
+  				alert( "Handler for .submit() called." );
+  				vent.preventDefault();
+			});
+  			$( "#submiter" ).click(function() {
+  				$( "#target" ).submit();
+			});
 		</script>
 		<style>
+			.dateday{
+				margin-top:60px;		
+				padding-left:30px;	
+			}
 			.calendar{
 				vertical-align: middle;	
 				margin: 0px auto;	
@@ -111,7 +106,14 @@
 				color: orange;
 				font-weight: bold;	
 			}
-		</style>
+			.adddate{
+				margin-top: 30px;
+				border:solid 4px;
+ 				border-radius:6px; 
+				width: 450px;
+				padding: 20px;
+			}
+			</style>
 	</head>
 	<body style="">
 		<nav class="navbar navbar-inverse navbar-static-top" style="min-height:20px;">
@@ -129,9 +131,9 @@
   					<ul class="nav navbar-nav" >
     					<li class="active"><a href="">Startseite<span class="sr-only">(current)</span></a></li>
     					<?php if(!isset($_SESSION['login']) or $_SESSION['login']==false): ?>
-    					<li><a href="https://xauth.ldkf.de/connect.php?appid=<?php echo $appid; ?>&ret=login.php">Login</a></li> 
+    					<li><a href="https://xauth.ldkf.de/connect.php?appid=<?php echo $appid; ?>&ret=login.php">Einloggen</a></li> 
     					<?php else : ?>
-    					<li><a href="logout.php">Logout</a></li> 
+    					<li><a href="logout.php">Ausloggen</a></li> 
     					<?php endif; ?>   					
      				</ul>
     			</div>
@@ -155,7 +157,7 @@
 			<div class="calendar">
 			<?php if(isset($_SESSION['login']) and $_SESSION['login']==true): ?>
 				<h3 style="padding-left:5px;">Hallo <?php echo $fn." ".$ln; ?>.</h3>
-    		<?php endif; ?>			
+			<?php endif; ?>			
 				<div class="row">
 					<div class="col-md-4 month" style="">
 						<div class="head">
@@ -200,7 +202,7 @@
 										if(isset($_SESSION['login']) and $_SESSION['login']==true){
 											$getdate = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 1 and `id` = $id"); 
 											while($name = $getdate->fetch_assoc()){
-												$dbdate[]= strtotime( $name['date'] );
+												$dbdate[]= date("m-d-y", strtotime( $name['date'] ));
 											}
 											$getyday = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 2 and `id` = $id"); 
 											while($namey = $getyday->fetch_assoc()){
@@ -216,7 +218,7 @@
       										echo '<tr>';
       									}
       									echo '<td class="day';
-      									if (in_array($kal_anzeige_heute_timestamp, $dbdate)) {
+      									if (in_array(date("m-d-y",$kal_anzeige_heute_timestamp), $dbdate)) {
     											echo " date";
 											}
       									if (in_array(date("m-d",$kal_anzeige_heute_timestamp), $dbyday)) {
@@ -251,7 +253,8 @@
 								if(isset($_SESSION['login']) and $_SESSION['login']==true){
 									$date=time();
 									$m=date('n', $date);
-									$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and `type` = 1 and `id` = $id"); 
+									$d=date('d', $date);
+									$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and DAY(date) = '$d' and  `type` = 1 and `id` = $id order by `date` asc"); 
 									while($name = $getdate->fetch_assoc()){
 										$dates[]=  date("G:i", strtotime( $name['date'] ));
 										$place[]=  $name['place'] ;
@@ -260,10 +263,37 @@
 									$i=0;
 									if(isset($dates[0])) {
 										foreach($dates as $time){
-											echo "Zeitpunkt: ".$time." Uhr<br>Beschreibung: ".$disc[$i]."<br>Ort: ".$place[$i]."<br><br>";
+											echo "<h4>Uhrzeit: ".$time." Uhr</h4><b>Beschreibung:</b> ".$disc[$i]."<br><b>Ort:</b> ".$place[$i]."<br><br>";
 											$i++;
 										}	
 									}
+									echo '
+										<div class="adddate">
+											<h4>Termin hinzuf&uuml;gen:</h4>
+											<form method="post" id="msn" class="" action="?">
+        										<div class="form-group" style="width:400px;">
+        											<input autocomplete="off" style="width:70px; type="time" maxlength=5 name="time" class="form-control" placeholder="hh:mm">
+        											<div class="input-group" style="vertical-align:middle">
+														<span class="input-group">										
+															<input style="" type="checkbox" value="1" name="year">
+																J&auml;hrlich an Termin erinnern.
+														</span>
+																							
+													</div>
+        											<input autocomplete="off" type="text" name="place" class="form-control" placeholder="Ort">
+													<textarea name="disc" required name="text" class="form-control" placeholder="Beschreibung"></textarea> 
+        											<button type="submit" class="btn btn-primary">Eintragen</button>
+        										</div>
+        					
+     	 									</form>
+										
+										</div>									
+									
+									
+									';
+									
+									
+									
 								}							
 							?>
 						
