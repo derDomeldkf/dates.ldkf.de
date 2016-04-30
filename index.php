@@ -115,7 +115,8 @@
 				font-weight: bolder;	
 			}
 			.other{
-				color: grey;			
+				color: grey;	
+				cursor: default;		
 			}
 			.date{
 				color: green;
@@ -136,6 +137,9 @@
 			.listetdates{
 				float: left;	
 				margin-right: 20px;	
+			}
+			.this{
+				cursor:pointer;		
 			}
 			</style>
 	</head>
@@ -258,7 +262,7 @@
     										else {
       										echo ' other ';
       									}
-      									echo '" id="'.$kal_anzeige_heute_timestamp.'"><span style="cursor:pointer">'.$kal_anzeige_heute_tag.'</span></td>';
+      									echo '" id="'.$kal_anzeige_heute_timestamp.'"><span>'.$kal_anzeige_heute_tag.'</span></td>';
     										if(date("N",$kal_anzeige_heute_timestamp) == 7){
       										echo '</tr>';
       									}	
