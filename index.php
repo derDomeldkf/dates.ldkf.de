@@ -66,8 +66,8 @@
    		$(document).on('click','#tobot',function() {
     			var win=window.open("https://telegram.me/date_reminder_bot?start=activate");
     			setTimeout(function(){  
-    									win.close();
-          						}, 2000);
+    				win.close();
+          	}, 2000);
     			
    		});
   		
@@ -159,7 +159,7 @@
     					<?php else : ?>
     					<li><a href="logout.php">Ausloggen</a></li> 
     					<?php endif; ?>
-    					<li><a href="#" id="tobot">Erinenrungsbot</a></li>  					
+    					<li><a href="#" id="tobot">Erinnerungsbot</a></li>  					
      				</ul>
     			</div>
 			</div>
