@@ -63,6 +63,15 @@
 				}
 				);
    		});
+   		$(document).on('click','#tobot',function() {
+    			var win=window.open("https://telegram.me/date_reminder_bot?start=activate");
+    			setTimeout(function(){  
+    									win.close();
+          						}, 2000);
+    			
+   		});
+  		
+   		
 		</script>
 		<style>
 			.dateday{
@@ -149,7 +158,8 @@
     					<li><a href="https://xauth.ldkf.de/connect.php?appid=<?php echo $appid; ?>&ret=login.php">Einloggen</a></li> 
     					<?php else : ?>
     					<li><a href="logout.php">Ausloggen</a></li> 
-    					<?php endif; ?>   					
+    					<?php endif; ?>
+    					<li><a href="#" id="tobot">Erinenrungsbot</a></li>  					
      				</ul>
     			</div>
 			</div>
