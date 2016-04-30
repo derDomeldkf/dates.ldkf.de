@@ -10,6 +10,7 @@
 			$info=json_decode($info);
 			if (isset($info->status) and $info->status=="Success"){
 				$userid=$info->userid;
+				echo $userid;
 				$check_uid = $db->query("SELECT `uid` FROM `userdates` WHERE tid LIKE '$userid'"); 
 				if(isset($check_uid->num_rows) and  $check_uid->num_rows!= 0) {
 					$id = $check_uid->fetch_assoc()['uid'];
@@ -39,6 +40,6 @@
 		$login_status=false;
 	}
    $_SESSION['login']=$login_status;
-	//header('Location: ./');
+	header('Location: ./');
 
 ?>
