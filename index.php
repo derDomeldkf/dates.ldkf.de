@@ -29,35 +29,7 @@
       	$error=1;
    	}
 	}
-	if(isset($_POST['disc']) and $_POST['disc']!="") {
-		$discr=$_POST['disc'];
-		$placedb=$_POST['place'];
-		$time=$_POST['time'];
-		$date_get=$_POST['date_post'];
-		$date_in = date ("Y-m-d", $date_get);
-		if(preg_match("/(2[0-4]|[01][1-9]|10):([0-5][0-9])/", $time)) {
-			$date_db=$date_in." ".$time.":00";
-		
-		}
-		else{
-			$date_db=$date_in." 00:00:00";
-		}
-		
-		if(isset($_POST['year'])) {
-			$type=2;
-		}
-		else {
-			$type=1;
-		}
-		
-		$insert = $db->query("INSERT INTO dates (id, date, place, disc, type) VALUES (
-			'". mysql_escape_string($id) ."',
-			'". mysql_escape_string($date_db) ."',
-			'". mysql_escape_string($placedb) . "', 
-			'". mysql_escape_string($discr) . "', 
-			'". mysql_escape_string($type) . "')"
-		); 
-	}
+
 
 
 
@@ -77,13 +49,20 @@
 		</script>
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
 		<script type="text/javascript">
-			$( "#target" ).submit(function( event ) {
-  				alert( "Handler for .submit() called." );
-  				vent.preventDefault();
-			});
-  			$( "#submiter" ).click(function() {
-  				$( "#target" ).submit();
-			});
+		 	$(document).on('click','.this',function() {
+    			var date= $(this).attr("id");
+    			$.post("include/get.php",{
+        			0: "<?php echo $id; ?>",
+        			1: date ,
+    			},
+   			function (data) {
+					if (data.indexOf("div") != -1) {
+						$( "div.listetdates" ).replaceWith( data );
+						$("#date_post").val(date);
+					}
+				}
+				);
+   		});
 		</script>
 		<style>
 			.dateday{
@@ -165,7 +144,7 @@
   				</div>
 	      	<div id="navbar" class="navbar-collapse collapse">
   					<ul class="nav navbar-nav" >
-    					<li class="active"><a href="">Startseite<span class="sr-only">(current)</span></a></li>
+    					<li class="active"><a href="?">Startseite<span class="sr-only">(current)</span></a></li>
     					<?php if(!isset($_SESSION['login']) or $_SESSION['login']==false): ?>
     					<li><a href="https://xauth.ldkf.de/connect.php?appid=<?php echo $appid; ?>&ret=login.php">Einloggen</a></li> 
     					<?php else : ?>
@@ -218,7 +197,7 @@
 							</div>
 						</div>
 						<div class="week">
-							<table class="kalender" style="width:100%;">
+							<table class="kalender" id="t" style="width:100%;">
 								<thead>
    								<tr>
       								<td class="day top">Mo</td>
@@ -260,7 +239,7 @@
       									if (in_array(date("m-d",$kal_anzeige_heute_timestamp), $dbyday)) {
     											echo " yday";
 											}					
-      									elseif($kal_anzeige_akt_tag >= 0 and $kal_anzeige_akt_tag < $kal_tage_gesamt){
+      									if($kal_anzeige_akt_tag >= 0 and $kal_anzeige_akt_tag < $kal_tage_gesamt){
      											echo ' this ';
      											if(date("dmY", time()) == date("dmY", $kal_anzeige_heute_timestamp)){
       											echo ' top';
@@ -269,7 +248,7 @@
     										else {
       										echo ' other ';
       									}
-      									echo '" id="'.$date.'"><span style="cursor:pointer">'.$kal_anzeige_heute_tag.'</span></td>';
+      									echo '" id="'.$kal_anzeige_heute_timestamp.'"><span style="cursor:pointer">'.$kal_anzeige_heute_tag.'</span></td>';
     										if(date("N",$kal_anzeige_heute_timestamp) == 7){
       										echo '</tr>';
       									}	
@@ -288,9 +267,28 @@
 							<div class="listetdates">
 							<?php
 								if(isset($_SESSION['login']) and $_SESSION['login']==true){
-									$date=time();
+									if(isset($_GET['date_post'])) {
+										$date=$_GET['date_post'];
+									}
+									else {
+										$date=time();
+									}
 									$m=date('n', $date);
 									$d=date('d', $date);
+									$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and DAY(date) = '$d' and  `type` = 2 and `id` = $id order by `date` asc"); 
+									while($name = $getdate->fetch_assoc()){
+										$datesa[]= date("G:i", strtotime( $name['date'] ));
+										$placea[]= $name['place'] ;
+										$disca[]= $name['disc'];
+									}
+									$i=0;
+									if(isset($datesa[0])) {
+										foreach($datesa as $time){
+											echo '<b>Beschreibung:</b> '.$disca[$i]."<br><b>Ort:</b> ".$placea[$i]."<br><br>";
+											$i++;
+										}	
+										echo "_______________________________";
+									}
 									$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and DAY(date) = '$d' and  `type` = 1 and `id` = $id order by `date` asc"); 
 									while($name = $getdate->fetch_assoc()){
 										$dates[]= date("G:i", strtotime( $name['date'] ));
@@ -307,7 +305,7 @@
 									echo '</div>
 										<div class="adddate">
 											<h4>Termin hinzuf&uuml;gen:</h4>
-											<form method="post" id="msn" class="" action="?">
+											<form method="post" id="msn" class="" action="include/insert.php?go='.$change_month.'">
         										<div class="form-group" style="width:400px;">
         											<input autocomplete="off" style="width:70px; type="time" maxlength=5 name="time" class="form-control" placeholder="hh:mm">
         												<div class="input-group" style="vertical-align:middle">
@@ -315,7 +313,7 @@
 															<font size="3pt">J&auml;hrlich an Termin erinnern</font>
 														</div>
 													<input autocomplete="off" type="text" name="place" class="form-control" placeholder="Ort">
-													<input type="hidden" name="date_post" class="form-control" value="'.$date.'">
+													<input type="hidden" id="date_post" name="date_post" class="form-control" value="'.$date.'">
 													<textarea name="disc" required name="text" class="form-control" placeholder="Beschreibung"></textarea> 
         											<button type="submit" class="btn btn-primary">Eintragen</button>
         										</div>
