@@ -29,7 +29,39 @@
       	$error=1;
    	}
 	}
-	
+	if(isset($_POST['disc']) and $_POST['disc']!="") {
+		$discr=$_POST['disc'];
+		$placedb=$_POST['place'];
+		$time=$_POST['time'];
+		$date_get=$_POST['date_post'];
+		$date_in = date ("Y-m-d", $date_get);
+		if(preg_match("/(2[0-4]|[01][1-9]|10):([0-5][0-9])/", $time)) {
+			$date_db=$date_in." ".$time.":00";
+		
+		}
+		else{
+			$date_db=$date_in." 00:00:00";
+		}
+		
+		if(isset($_POST['year'])) {
+			$type=2;
+		}
+		else {
+			$type=1;
+		}
+		
+		$insert = $db->query("INSERT INTO dates (id, date, place, disc, type) VALUES (
+			'". mysql_escape_string($id) ."',
+			'". mysql_escape_string($date_db) ."',
+			'". mysql_escape_string($placedb) . "', 
+			'". mysql_escape_string($discr) . "', 
+			'". mysql_escape_string($type) . "')"
+		); 
+	}
+
+
+
+
 ?>
 
 <html>
@@ -56,7 +88,6 @@
 		<style>
 			.dateday{
 				margin-top:60px;		
-				padding-left:30px;	
 			}
 			.calendar{
 				vertical-align: middle;	
@@ -107,11 +138,16 @@
 				font-weight: bold;	
 			}
 			.adddate{
-				margin-top: 30px;
+				float: left;	
+				margin-bottom: 30px;
 				border:solid 4px;
  				border-radius:6px; 
 				width: 450px;
 				padding: 20px;
+			}
+			.listetdates{
+				float: left;	
+				margin-right: 20px;	
 			}
 			</style>
 	</head>
@@ -249,6 +285,7 @@
 					</div>
 					<div class="col-md-8" style="">
 						<div class="dateday">
+							<div class="listetdates">
 							<?php
 								if(isset($_SESSION['login']) and $_SESSION['login']==true){
 									$date=time();
@@ -256,31 +293,29 @@
 									$d=date('d', $date);
 									$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and DAY(date) = '$d' and  `type` = 1 and `id` = $id order by `date` asc"); 
 									while($name = $getdate->fetch_assoc()){
-										$dates[]=  date("G:i", strtotime( $name['date'] ));
-										$place[]=  $name['place'] ;
-										$disc[]=$name['disc'];
+										$dates[]= date("G:i", strtotime( $name['date'] ));
+										$place[]= $name['place'] ;
+										$disc[]= $name['disc'];
 									}
 									$i=0;
 									if(isset($dates[0])) {
 										foreach($dates as $time){
-											echo "<h4>Uhrzeit: ".$time." Uhr</h4><b>Beschreibung:</b> ".$disc[$i]."<br><b>Ort:</b> ".$place[$i]."<br><br>";
+											echo '<h4 style="margin-top:0" >Uhrzeit: '.$time." Uhr</h4><b>Beschreibung:</b> ".$disc[$i]."<br><b>Ort:</b> ".$place[$i]."<br><br>";
 											$i++;
 										}	
 									}
-									echo '
+									echo '</div>
 										<div class="adddate">
 											<h4>Termin hinzuf&uuml;gen:</h4>
 											<form method="post" id="msn" class="" action="?">
         										<div class="form-group" style="width:400px;">
         											<input autocomplete="off" style="width:70px; type="time" maxlength=5 name="time" class="form-control" placeholder="hh:mm">
-        											<div class="input-group" style="vertical-align:middle">
-														<span class="input-group">										
+        												<div class="input-group" style="vertical-align:middle">
 															<input style="" type="checkbox" value="1" name="year">
-																J&auml;hrlich an Termin erinnern.
-														</span>
-																							
-													</div>
-        											<input autocomplete="off" type="text" name="place" class="form-control" placeholder="Ort">
+															<font size="3pt">J&auml;hrlich an Termin erinnern</font>
+														</div>
+													<input autocomplete="off" type="text" name="place" class="form-control" placeholder="Ort">
+													<input type="hidden" name="date_post" class="form-control" value="'.$date.'">
 													<textarea name="disc" required name="text" class="form-control" placeholder="Beschreibung"></textarea> 
         											<button type="submit" class="btn btn-primary">Eintragen</button>
         										</div>
