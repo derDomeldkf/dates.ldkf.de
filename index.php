@@ -11,7 +11,7 @@
 		$id=$_COOKIE['user'];
 		$check_uid = $db->query("SELECT `uid` FROM `userdates` WHERE id LIKE '$id'"); 
 		if(isset($check_uid->num_rows) and  $check_uid->num_rows!= 0) {
-			$id = $check_uid->fetch_assoc()['uid'];
+			$ids= $check_uid->fetch_assoc()['uid'];
 			$_SESSION['id']=$id;	
 			$_SESSION['login']=true;
 	      $info=get_user($id, $secret, $appid, $ssl);
