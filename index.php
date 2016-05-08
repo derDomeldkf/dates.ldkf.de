@@ -30,7 +30,8 @@
    	}
 	}
 
-
+	$fn="";
+	$ln="";
 
 
 
@@ -185,7 +186,7 @@
 		<div class="main" role="main" style="height:100%">
 			<div class="calendar">
 			<?php if(isset($_SESSION['login']) and $_SESSION['login']==true): ?>
-				<h3 style="padding-left:5px;">Hallo <?php echo $fn." ".$ln; ?>.</h3>
+				<h3 style="padding-left:5px;">Hallo <?php echo $fn." ".$ln; ?></h3>
 			<?php endif; ?>			
 				<div class="row">
 					<div class="col-md-4 month" style="">
@@ -228,8 +229,9 @@
 										$dbyday[]="";
 										$dbdate[]="";
 										$month = date("n", $kal_datum);
+										$y = date("Y", $kal_datum);
 										if(isset($_SESSION['login']) and $_SESSION['login']==true){
-											$getdate = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and `type` = 1 and `id` = $id"); 
+											$getdate = $db->query("SELECT `date` FROM `dates` WHERE MONTH(date) = '$month' and YEAR(date) = '$y' and `type` = 1 and `id` = $id"); 
 											while($name = $getdate->fetch_assoc()){
 												$dbdate[]= date("m-d-y", strtotime( $name['date'] ));
 											}
