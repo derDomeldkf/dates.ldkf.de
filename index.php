@@ -330,7 +330,7 @@
 														</div>
 													<input autocomplete="off" type="text" name="place" class="form-control" placeholder="Ort">
 													<input type="hidden" id="date_post" name="date_post" class="form-control" value="'.$date.'">
-													<textarea name="disc" required name="text" class="form-control" placeholder="Beschreibung"></textarea> 
+													<textarea name="disc"  name="text" class="form-control" placeholder="Beschreibung" required></textarea> 
         											<button type="submit" class="btn btn-primary">Eintragen</button>
         										</div>
         					
