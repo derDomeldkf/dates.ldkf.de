@@ -323,7 +323,7 @@
 											<h4>Termin hinzuf&uuml;gen:</h4>
 											<form method="post" id="msn" class="" action="include/insert.php?go='.$change_month.'">
         										<div class="form-group" style="width:400px;">
-        											<input autocomplete="off" style="width:70px; type="time" maxlength=5 name="time" class="form-control" placeholder="hh:mm">
+        											<input autocomplete="off" style="width:70px;" type="time" maxlength=5 name="time" class="form-control" placeholder="hh:mm">
         												<div class="input-group" style="vertical-align:middle">
 															<input style="" type="checkbox" value="1" name="year">
 															<font size="3pt">J&auml;hrlich an Termin erinnern</font>

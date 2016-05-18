@@ -8,6 +8,7 @@
 			$id=$_POST[0];
 			$m=date('n', $date);
 			$d=date('d', $date);
+			$y=date('Y', $date);
 			$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and DAY(date) = '$d' and  `type` = 2 and `id` = $id order by `date` asc"); 
 			while($name = $getdate->fetch_assoc()){
 				$datesa[]= date("G:i", strtotime( $name['date'] ));
@@ -22,7 +23,7 @@
 				}	
 				echo "_______________________________";
 			}
-			$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and DAY(date) = '$d' and  `type` = 1 and `id` = $id order by `date` asc"); 
+			$getdate = $db->query("SELECT `date`, `place`, `disc` FROM `dates` WHERE MONTH(date) = '$m' and DAY(date) = '$d' and YEAR(date) = '$y' and  `type` = 1 and `id` = $id order by `date` asc"); 
 				while($name = $getdate->fetch_assoc()){
 					$dates[]= date("G:i", strtotime( $name['date'] ));
 					$place[]= $name['place'] ;
