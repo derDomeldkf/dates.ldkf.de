@@ -40,6 +40,6 @@
 		$login_status=false;
 	}
    $_SESSION['login']=$login_status;
-	header('Location: ./');
+	//header('Location: ./');
 
 ?>
