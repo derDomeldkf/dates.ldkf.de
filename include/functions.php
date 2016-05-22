@@ -28,7 +28,7 @@
      	else {
       	$content = $result;
 		}
-		return $hash."<br>".$user_id.$appid.$secret.$method.$action.$ssl;
+		return $content;
 	} 
 	
 	function month_rename($date_eng) {
