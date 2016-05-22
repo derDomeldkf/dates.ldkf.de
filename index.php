@@ -15,6 +15,7 @@
 			$_SESSION['id']=$id;	
 			$_SESSION['login']=true;
 	      $info=get_user($ids, $secret, $appid, $ssl);
+	      var_dump($info);
          $info=json_decode($info);
          if ($info->status=="Success"){
             $ln=$info->last_name;
