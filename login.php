@@ -10,7 +10,7 @@
 			$info=json_decode($info);
 			if (isset($info->status) and $info->status=="Success"){
 				$userid=$info->userid;
-				echo $userid;
+				echo $id;
 				$check_uid = $db->query("SELECT `uid` FROM `userdates` WHERE tid LIKE '$userid'"); 
 				if(isset($check_uid->num_rows) and  $check_uid->num_rows!= 0) {
 					$id = $check_uid->fetch_assoc()['uid'];
