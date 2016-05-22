@@ -1,6 +1,6 @@
 <?php
 	function get_user($user_id, $secret, $appid, $ssl) {
-		$action="username";
+		$action="first_name";
 		$method="action";
 		return post($user_id, $appid, $secret, $method, $action, $ssl);
 	}	
