@@ -8,7 +8,6 @@
 		$action="userid";
 		$method="action";
 		return post($user_id, $appid, $secret, $method, $action, $ssl);	
-	
 	}
 	function post($user_id, $appid, $secret, $method, $action, $ssl){
 		$hash = hash("sha256", $secret.$appid.$user_id.$action);
@@ -29,7 +28,7 @@
      	else {
       	$content = $result;
 		}
-		return $content;
+		return $hash."<br>".$user_id.$appid.$secret.$method.$action.$ssl;
 	} 
 	
 	function month_rename($date_eng) {

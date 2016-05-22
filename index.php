@@ -14,7 +14,7 @@
 			$ids= $check_uid->fetch_assoc()['uid'];
 			$_SESSION['id']=$id;	
 			$_SESSION['login']=true;
-	      $info=get_user($id, $secret, $appid, $ssl);
+	      $info=get_user($ids, $secret, $appid, $ssl);
          $info=json_decode($info);
          if ($info->status=="Success"){
             $ln=$info->last_name;
