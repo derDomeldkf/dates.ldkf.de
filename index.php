@@ -1,5 +1,9 @@
 <?php
 	session_start();
+	
+	$fn="";
+	$ln="";
+
 	include "include/config.php";
  	include "include/db_connect.php";
   	include "include/functions.php";
@@ -27,7 +31,7 @@
 	      $info=get_user($ids, $secret, $appid, $ssl, $action);
          $info=json_decode($info);
          if ($info->status=="Success"){
-            $ln=$info->first_name;
+            $ln=$info->last_name;
          }
          else {
          	$error=2;
@@ -38,9 +42,6 @@
       	$error=1;
    	}
 	}
-
-	$fn="";
-	$ln="";
 
 
 
