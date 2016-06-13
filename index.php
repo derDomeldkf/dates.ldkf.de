@@ -14,17 +14,25 @@
 			$ids= $check_uid->fetch_assoc()['uid'];
 			$_SESSION['id']=$id;	
 			$_SESSION['login']=true;
-	      $info=get_user($ids, $secret, $appid, $ssl);
-	      var_dump($info);
+			$action="first_name";
+	      $info=get_user($ids, $secret, $appid, $ssl, $action);
          $info=json_decode($info);
          if ($info->status=="Success"){
-            $ln=$info->last_name;
             $fn=$info->first_name;
-            $username=$info->username;
          }
          else {
          	$error=2;
          }
+         $action="last_name";
+	      $info=get_user($ids, $secret, $appid, $ssl, $action);
+         $info=json_decode($info);
+         if ($info->status=="Success"){
+            $ln=$info->first_name;
+         }
+         else {
+         	$error=2;
+         }
+         
  		}
  		else {
       	$error=1;
